@@ -1,0 +1,26 @@
+Index: src/library/stats/R/wilcox.test.R
+===================================================================
+--- src/library/stats/R/wilcox.test.R	(revision 85827)
++++ src/library/stats/R/wilcox.test.R	(working copy)
+@@ -346,11 +346,17 @@
+                 METHOD <- paste(METHOD, "with continuity correction")
+             }
+ 	    z <- (z - CORRECTION) / SIGMA
++	    # Edgeworth Expansion, see https://aakinshin.net/posts/mw-edgeworth/
++	    N <- n.x+n.y
++	    p.edge <- n.x / N
++	    c_20 <- -6*(1-p.edge^5-(1-p.edge)^5) / (25*(p.edge*(1-p.edge))^2)
++	    H_3 <- z^3 - 3*z
++	    corr.p <- pnorm(z) - (dnorm(z) * (1/N) * (c_20 / 24) * H_3)
++	    corr.p <- min(max(corr.p, 0), 1)
+ 	    PVAL <- switch(alternative,
+-			   "less" = pnorm(z),
+-			   "greater" = pnorm(z, lower.tail=FALSE),
+-			   "two.sided" = 2 * min(pnorm(z),
+-						 pnorm(z, lower.tail=FALSE)))
++	                   "less" = corr.p,
++	                   "greater" = 1-corr.p,
++	                   "two.sided" = 2 * min(1-corr.p, corr.p))
+             if(conf.int) {
+                 ## Asymptotic confidence interval for the location
+                 ## parameter mean(x) - mean(y) in the two-sample case
