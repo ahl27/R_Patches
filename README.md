@@ -8,6 +8,6 @@ This list is partly for my own reference so I don't forget what I was planning t
 
 ## Known Issues
 - [`*signrank` functions hang for large n](https://aakinshin.net/posts/signrank-limitations/): Happens around `n>=1000`. Solution is likely to implement an `exact=c(TRUE,FALSE)` argument with a large population size approximation (e.g., Edgeworth).
-- [`wilcox.test` produces incorrect median estimates](https://aakinshin.net/posts/r-hodges-lehmann-problems/): `$estimate` is wildly incorrect in presence of zeros, ties, or degeneracy.
+- [`wilcox.test` produces incorrect median estimates](https://aakinshin.net/posts/r-hodges-lehmann-problems/): `$estimate` is wildly incorrect in presence of zeros, ties, or degeneracy. This issue has been addressed and fixed in DescTools ([link](https://github.com/AndriSignorell/DescTools/issues/97)), but still needs to be fixed in base.
 - [`wilcox.test` inflates estimated p-values at tails](https://aakinshin.net/posts/r-mann-whitney-incorrect-p-value/): if either population is large (>=50), p-values will be inflated due to normal approximation. [Edgeworth expansion](https://aakinshin.net/posts/mw-edgeworth/) should be implemented for improved accuracy.
 
